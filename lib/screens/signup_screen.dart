@@ -1,5 +1,7 @@
 import 'package:flash_card/screens/flash_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -9,15 +11,33 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
 
-  void _signup() {
+  // Firebase Authentication instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize Firebase
+    Firebase.initializeApp();
+  }
+
+  void _signup() async {
     // Basic validation
     if (_passwordController.text != _confirmPasswordController.text) {
       setState(() {
         _errorMessage = 'Passwords do not match';
+      });
+      return;
+    }
+
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      setState(() {
+        _errorMessage = 'Please fill in all fields';
       });
       return;
     }
@@ -27,21 +47,28 @@ class _SignupScreenState extends State<SignupScreen> {
       _errorMessage = null;
     });
 
-    // Simulating signup logic
-    Future.delayed(Duration(seconds: 2), () {
+    try {
+      // Creating a new user with Firebase Authentication
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
       setState(() {
         _isLoading = false;
-        _errorMessage = null;
       });
 
-      // Navigating to the Flashcard List screen
+      // Navigating to the Flashcard List screen after successful sign-up
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => FlashcardListScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => FlashcardListScreen()),
       );
-    });
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.message;  // Show Firebase error message
+      });
+    }
   }
 
   @override
@@ -106,7 +133,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ),
@@ -127,7 +155,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ),
@@ -148,7 +177,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ),
@@ -167,6 +197,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 SizedBox(height: 24),
+                
                 // Sign Up Button
                 ElevatedButton(
                   onPressed: _isLoading ? null : _signup,
@@ -178,17 +209,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   child: _isLoading
                       ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
                       : const Text(
-                    'Create Account',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                          'Create Account',
+                          style: TextStyle(fontSize: 16),
+                        ),
                 ),
                 SizedBox(height: 16),
                 // Login Link

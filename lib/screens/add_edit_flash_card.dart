@@ -71,7 +71,7 @@ class _AddEditFlashcardScreenState extends State<AddEditFlashcardScreen> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_sharp, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -83,7 +83,7 @@ class _AddEditFlashcardScreenState extends State<AddEditFlashcardScreen> {
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+                children: [                  
                   // Preview Card
                   Container(
                     height: 200,
@@ -169,7 +169,7 @@ class _AddEditFlashcardScreenState extends State<AddEditFlashcardScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: Colors.blue[600]!),
+                        borderSide: BorderSide(color: const Color.fromARGB(255, 0, 0, 0)!),
                       ),
                     ),
                     maxLines: 3,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'flash_card_list.dart';
 import 'signup_screen.dart';
 
@@ -10,40 +11,71 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isLoading = false;
   String? _errorMessage;
 
-  void _login() {
+  Future<void> _login() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    // Simulating login logic
-    Future.delayed(const Duration(seconds: 2), () {
-      if (_emailController.text.trim() == "test@gmail.com" &&
-          _passwordController.text == "123456") {
-        setState(() {
-          _isLoading = false;
-        });
+    try {
+      // Attempt to sign in with email and password
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const FlashcardListScreen(),
-          ),
-        );
-      } else {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = 'Invalid email or password. Please try again.';
-        });
-      }
-    });
+      // If successful, navigate to the flashcard list screen
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const FlashcardListScreen(),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        switch (e.code) {
+          case 'user-not-found':
+            _errorMessage = 'No user found with this email.';
+            break;
+          case 'wrong-password':
+            _errorMessage = 'Wrong password provided.';
+            break;
+          case 'invalid-email':
+            _errorMessage = 'Invalid email address.';
+            break;
+          case 'user-disabled':
+            _errorMessage = 'This account has been disabled.';
+            break;
+          default:
+            _errorMessage = 'An error occurred. Please try again.';
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // The build method remains exactly the same as your original code
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -85,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Email',                    
                     prefixIcon: const Icon(Icons.email_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -147,17 +179,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: _isLoading
                       ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
                       : const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                          'Login',
+                          style: TextStyle(fontSize: 16),
+                        ),
                 ),
                 const SizedBox(height: 16),
                 // Sign Up Link

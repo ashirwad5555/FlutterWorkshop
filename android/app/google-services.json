@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "871455579333",
+    "firebase_url": "https://payment-59ec6-default-rtdb.firebaseio.com",
+    "project_id": "payment-59ec6",
+    "storage_bucket": "payment-59ec6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871455579333:android:4cd332c12b5870ee8f24ac",
+        "android_client_info": {
+          "package_name": "com.example.auth_payment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871455579333-2cia9hkg6n3fdfes5ir7muqgglq2acp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFmnAEfnhuQsSMYb_tWm7lucruH0wKFYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871455579333-2cia9hkg6n3fdfes5ir7muqgglq2acp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871455579333-dqkmq9u2ved6pr5hrja9irkur23cso04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.authPayment"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871455579333:android:5998c105b72fecee8f24ac",
+        "android_client_info": {
+          "package_name": "com.example.flash_card"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871455579333-2cia9hkg6n3fdfes5ir7muqgglq2acp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFmnAEfnhuQsSMYb_tWm7lucruH0wKFYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871455579333-2cia9hkg6n3fdfes5ir7muqgglq2acp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871455579333-dqkmq9u2ved6pr5hrja9irkur23cso04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.authPayment"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
